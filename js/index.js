@@ -8,7 +8,7 @@ import Preloader    from './components/Preloader';
 
 ReactDOM.render(<Preloader/>, document.querySelector('#root'));
 
-superagent.get('/data.json').end( (err, res) => {
+superagent.get('data.json').end( (err, res) => {
     if(!err){
         ReactDOM.render(<App appData={res.body} />, document.querySelector('#root'));
     }else{

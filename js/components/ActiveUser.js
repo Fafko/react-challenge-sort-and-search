@@ -18,7 +18,7 @@ class ActiveUser extends Component{
         return (
             <div className='col-sm-4 col-md-3 col-lg-2' >
                 <div className="thumbnail">
-                    <img src={`/images/${user.image}.svg`}/>
+                    <img src={`images/${user.image}.svg`}/>
                     <div className="thumbnail-caption">
                         <h3>{this.props.user.name}</h3>
                         <table className="user-info table table-responsive">
