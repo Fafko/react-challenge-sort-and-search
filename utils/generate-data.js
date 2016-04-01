@@ -15,7 +15,7 @@ const jsonfile = require('jsonfile');
 ***/
 
 const config = {
-  path: './public/_data/data.json',
+  path: './public/data.json',
   amount: 150,
   phraseLength: 15,
   images: ['cat', 'dog', 'fox', 'koala', 'lion', 'owl', 'penguin', 'pig', 'raccoon', 'sheep']
