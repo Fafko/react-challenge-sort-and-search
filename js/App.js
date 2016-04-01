@@ -1,52 +1,78 @@
 import React, { Component } from 'react';
-import Button from './components/Button';
 
+import SearchBar    from './components/SearchBar';
+import ToolBar      from './components/ToolBar';
+import UserList     from './components/UserList';
+import ActiveUser   from './components/ActiveUser';
 
-export default class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      phrase: 'Нажми на кнопку!',
-      count: 0
-    };
-  }
-
-  updateBtn() {
-    const phrases = [
-      'ЖМИ!', 'Не останавливайся!',
-      'У тебя хорошо получается!', 'Красавчик!',
-      'Вот это и есть React!', 'Продолжай!',
-      'Пока ты тут нажимаешь кнопку другие работают!',
-      'Всё хватит!', 'Ну и зачем ты нажал?',
-      'В следующий раз тут будет полезный совет',
-      'Чего ты ждешь от этой кнопки?',
-      'Если дойдёшь до тысячи, то сразу научищься реакту',
-      'ой, всё!', 'Ты нажал кнопку столько раз, что обязан на ней жениться',
-      'У нас было 2 npm-пакета с реактом, 75 зависимостей от сторонних библиотек, '
-      + '5 npm-скриптов и целое множество плагинов галпа всех сортов и расцветок, '
-      + 'а также redux, jquery, mocha, пачка плагинов для eslint и ингерация с firebase. '
-      + 'Не то что бы это был необходимый набор для фронтенда. Но если начал собирать '
-      + 'вебпаком, становится трудно остановиться. Единственное, что вызывало у меня '
-      + 'опасения - это jquery. Нет ничего более беспомощного, безответственного и испорченного, '
-      + 'чем рядовой верстальщик без jquery. Я знал, что рано или поздно мы перейдем и на эту дрянь.',
-      'coub про кота-джедая: http://coub.com/view/spxn',
-      'Дальнобойщики на дороге ярости: http://coub.com/view/6h0dy',
-      'Реакция коллег на ваш код: http://coub.com/view/5rjjw',
-      'Енот ворует еду: http://coub.com/view/xi3cio',
-      'Российский дизайн: http://coub.com/view/16adw5i0'
-    ];
-    this.setState({
-      count: this.state.count + 1,
-      phrase: phrases[parseInt(Math.random() * phrases.length)]
-    });
-  }
-
-  render() {
-    return (
-      <div className="container app">
-        <Button count={this.state.count} update={this.updateBtn.bind(this)} />
-        <p style={{marginTop: 2 + 'rem'}}>{this.state.phrase}</p>
-      </div>
-    );
-  }
+export default
+class App extends Component {
+    
+    constructor(props) {
+        super(props);
+        this.state = {
+            filterText: '',
+            filterMode: '',
+            filterBy: ''
+        };
+    }
+    
+    setFilterString(event) {
+        this.setState({
+            filterText: event.target.value
+        })
+    }
+    
+    setFilterMode(prop){
+        if(this.state.filterBy === prop){
+            this.setState({
+                filterMode: this.state.filterMode === 'asc' ? 'desc' : 'asc'
+            })
+        }else{
+            this.setState({
+                filterMode: 'asc',
+                filterBy: prop
+            })
+        }
+    }
+    
+    filterUsers(){
+        let users = this.props.appData;
+        
+        if(this.state.filterText.length){
+            users = users.filter((user) => {
+                return user.name.indexOf(this.state.filterText) > -1;
+            });
+        }
+        
+        if(this.state.filterBy.length || this.state.filterMode.length){
+            users.sort((a, b) => {
+                if(a[this.state.filterBy] < b[this.state.filterBy]){
+                    return this.state.filterMode === 'asc' ? -1 : 1;
+                }
+                if(a[this.state.filterBy] > b[this.state.filterBy]){
+                    return this.state.filterMode === 'asc' ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+        
+        return users;
+    }
+    
+    render() {
+        
+        let users = this.filterUsers();
+        
+        return (
+            <div className="container-fluid app">
+                <SearchBar filterText={this.state.filterText} setFilterString={this.setFilterString.bind(this)} />
+                <ToolBar filterBy={this.state.filterBy} filterMode={this.state.filterMode} setFilterMode={this.setFilterMode.bind(this)} />
+                <div className="row">
+                    <ActiveUser user={users[0]} />
+                    <UserList users={ users } />
+                </div>
+            </div>
+        );
+    }
 }
