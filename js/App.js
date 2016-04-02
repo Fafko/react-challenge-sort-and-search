@@ -11,6 +11,7 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            activeUserId: 0,
             filterText: '',
             filterMode: '',
             filterBy: ''
@@ -36,12 +37,18 @@ class App extends Component {
         }
     }
     
+    setActiveUser(key){
+        this.setState({
+            activeUserId: key
+        })
+    }
+    
     filterUsers(){
         let users = this.props.appData;
         
         if(this.state.filterText.length){
             users = users.filter((user) => {
-                return user.name.indexOf(this.state.filterText) > -1;
+                return user.name.search( new RegExp( this.state.filterText, "i")) !== -1;
             });
         }
         
@@ -60,17 +67,25 @@ class App extends Component {
         return users;
     }
     
+    getActiveUser(users){
+        let user = users.filter((user) => {
+            return (user.id === this.state.activeUserId);
+        });
+        return user[0] || users[0];
+    }
+    
     render() {
         
         let users = this.filterUsers();
+        let user = this.getActiveUser(users);
         
         return (
             <div className="container-fluid app">
                 <SearchBar filterText={this.state.filterText} setFilterString={this.setFilterString.bind(this)} />
                 <ToolBar filterBy={this.state.filterBy} filterMode={this.state.filterMode} setFilterMode={this.setFilterMode.bind(this)} />
                 <div className="row">
-                    <ActiveUser user={users[0]} />
-                    <UserList users={ users } />
+                    <ActiveUser user={user} />
+                    <UserList users={users} setActiveUser={this.setActiveUser.bind(this)} />
                 </div>
             </div>
         );

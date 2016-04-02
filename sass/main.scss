@@ -94,3 +94,7 @@
 body{
   min-height: 100vh;
 }
+
+.user-list tbody tr{
+  cursor: pointer;
+}

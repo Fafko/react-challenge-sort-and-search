@@ -9,7 +9,7 @@ class UserList extends Component{
         let users = [];
 
         this.props.users.forEach((user) => {
-            users.push(<UserData user={user} key={user.id} />);
+            users.push(<UserData user={user} key={user.id} setActiveUser={this.props.setActiveUser} />);
         });
         
         return (

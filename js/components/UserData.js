@@ -5,7 +5,7 @@ class UserData extends Component{
     
     render(){
         return (
-            <tr>
+            <tr onClick={ () => {this.props.setActiveUser(this.props.user.id)} } >
                 <td><img src={`images/${this.props.user.image}.svg`} className="user-image"/></td>
                 <td>{this.props.user.name}</td>
                 <td>{this.props.user.age}</td>
